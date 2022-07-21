@@ -122,7 +122,6 @@ def getArticles(article_endpoint, jwt, numItems, cutoff_date='2022-01-01', sourc
 from oauth2client.service_account import ServiceAccountCredentials
 from apiclient.discovery import build
 import httplib2
-import requests
 
 # Get new DP articles
 dp_articles = getArticles(dp_article_endpoint,
@@ -261,13 +260,13 @@ def getRange(viewId, daySpan, spans):
 
 
 #dash imports
-import dash
+#import dash
 from dash import Dash, dcc, html, Input, Output
+# import plotly.express as px
+# import dash_bootstrap_components as dbc
+# import plotly
 import plotly.express as px
-import dash_bootstrap_components as dbc
-import plotly
-import plotly.express as px
-import plotly.io as pio
+# import plotly.io as pio
 
 # print(dp_articles)
 dp_past_week, dp_past_month = get_week_month_engagement('22050415')

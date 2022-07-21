@@ -277,7 +277,7 @@ dp_past_week, dp_past_month = get_week_month_engagement('22050415')
 dpOverallStats = getRange('22050415', 7, 16)
 dpOverallStats = dpOverallStats.rename_axis('date')
 dpOverallStats.index = pd.to_datetime(dpOverallStats.index)
-print(dpOverallStats)
+#print(dpOverallStats)
 
 #clean data
 graphData = dpOverallStats.groupby(pd.Grouper(level='date', freq='W')).mean()

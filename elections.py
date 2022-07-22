@@ -279,34 +279,57 @@ dpOverallStats.index = pd.to_datetime(dpOverallStats.index)
 #clean data
 graphData = dpOverallStats.groupby(pd.Grouper(level='date', freq='W')).mean()
 graphData = graphData.round(decimals=2)
-print(graphData)
+#print(graphData)
 
 #dash app
 app = Dash(__name__)
 
 app.layout = html.Div([
-    html.H4('DP'),
-    dcc.Graph(id="graph"),
-    dcc.Checklist(
-        id="checklist",
-        options=["uniquePageViews", "pageViews", "bounceRate", "avgTimeOnPage"],
-        value=["pageViews", "bounceRate"],
-        inline=True
-    ),
+
+    html.Div([
+        dcc.Graph(id='graph')
+    ]),
+
+    html.Div([
+
+        html.Br(),
+        html.Div(id='output_data'),
+        html.Br(),
+
+        html.Label(['Choose metric:'],style={'font-weight': 'bold', "text-align": "center"}),
+
+        dcc.Dropdown(id='dropdown',
+            options=[
+                     {'label': 'Bounce Rate', 'value': 'bounceRate'},
+                     {'label': 'Avg Time on Page', 'value': 'avgTimeOnPage'},
+                     {'label': 'Unique Page Views', 'value': 'uniquePageViews'}
+            ],
+            optionHeight=35,                    #height/space between dropdown options
+            value='bounceRate',                    #dropdown value selected automatically when page loads
+            disabled=False,                     #disable dropdown value selection
+            multi=False,                        #allow multiple dropdown values to be selected
+            searchable=True,                    #allow user-searching of dropdown values
+            search_value='',                    #remembers the value searched in dropdown
+            placeholder='Please select...',     #gray, default text shown when no option is selected
+            clearable=True,                     #allow user to removes the selected value
+            style={'width':"100%"},             #use dictionary to define CSS styles of your dropdown
+            ),
+    ]),
+
 ])
 
 @app.callback(
-    Output("graph", "figure"),
-    Input("checklist", "value"))
-def update_line_chart(metric):
-    fig = px.line(graphData[metric],
-        x=graphData.index, y='bounceRate')
+    Output(component_id='graph', component_property='figure'),
+    [Input(component_id='dropdown', component_property='value')]
+)
+
+def build_graph(column_chosen):
+    dff = graphData
+    fig = px.line(dff, x=graphData.index, y=column_chosen)
+    fig.update_traces(line_color='#80231c', line_width=5)
+    fig.update_layout(title={'text':'DP Analytics Dashboard',
+                      'font':{'size':28},'x':0.5,'xanchor':'center'})
     return fig
-
-# analyze data just in plotly
-# fig = px.line(graphData, x=graphData.index, y='pageViews', title='DP')
-# fig.show()
-
 
 #Run Program
 if __name__ == '__main__':
